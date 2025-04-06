@@ -7,9 +7,7 @@ export async function generateEmbedding(text) {
     const embeddings = new OpenAIEmbeddings({
       model: "text-embedding-3-large"
     });
-    console.log(text);
     const response = await embeddings.embedQuery(text);
-    console.log(response);
     return response;
   } catch (error) {
     console.error("Error generating embedding:", error.response.data);
