@@ -5,23 +5,38 @@ import { runCVReview } from '../Agents/agent.js';
 
 const router = express.Router();
 
-router.get('/:id',async (req, res) => {
-    const {id} = req.params
-
-    const candidate = await Candidate.findById(id);
-    if (!candidate) {
+router.get('/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      const candidate = await Candidate.findById(id);
+      if (!candidate) {
         return res.status(404).json({ message: "Candidate not found" });
-    }
-
-    const job = await Job.findOne({title : candidate.jobTitle});
-
-    if (!job) {
+      }
+  
+      const job = await Job.findOne({ title: candidate.jobTitle });
+      if (!job) {
         return res.status(404).json({ message: "Job not found" });
+      }
+  
+      const { evaluation } = await runCVReview(job.summary, candidate.summary, candidate.jobTitle);
+  
+      // Save evaluation in the candidate document
+      candidate.evaluation = evaluation;
+      candidate.Shortlisted = evaluation.finalDecision === "shortlist";
+      await candidate.save();
+  
+      console.log("Evaluation saved successfully:", evaluation);
+  
+      res.status(200).json({
+        message: "Candidate evaluation completed and saved.",
+        evaluation: evaluation
+      });
+    } catch (error) {
+      console.error("Error during evaluation:", error);
+      res.status(500).json({ message: "Server error", error });
     }
-
-    const response =await runCVReview(job.summary, candidate.summary,candidate.jobTitle);
-    console.log(response);
-    res.send('Agent Analysis Endpoint');
-});
+  });
+  
 
 export default router;

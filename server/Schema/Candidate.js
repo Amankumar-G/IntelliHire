@@ -1,4 +1,40 @@
-import mongoose ,{ Schema }from "mongoose"; 
+import mongoose, { Schema } from "mongoose";
+
+const evaluationSchema = new Schema({
+  hrScore: {
+    culturalAlignment: Number,
+    communicationSkills: Number,
+    leadershipPotential: Number,
+    emotionalIntelligence: Number,
+  },
+  hrRationale: String,
+  culturalRedFlags: [String],
+  diversityAssets: [String],
+  techScore: Number,
+  techRationale: String,
+  skillValidation: {
+    verified: [String],
+    unverified: [String],
+  },
+  techDebtRisk: String,
+  businessScore: Number,
+  businessRationale: String,
+  timeToProductivity: String,
+  growthForecast: {
+    "6mo": String,
+    "3yr": String,
+  },
+  finalDecision: String,
+  decisionRationale: String,
+  scoreBreakdown: {
+    hrScore: Number,
+    techScore: Number,
+    businessScore: Number,
+    compositeScore: Number,
+  },
+  riskFactors: [String],
+  recommendedNextSteps: [String],
+}, { _id: false }); // _id disabled for nested schema
 
 const candidateSchema = new Schema({
   name: {
@@ -16,7 +52,7 @@ const candidateSchema = new Schema({
       },
       message: (props) => `${props.value} is not a valid email!`,
     },
-    index: true, // For faster email search
+    index: true,
   },
   originalFileName: {
     type: String,
@@ -29,9 +65,8 @@ const candidateSchema = new Schema({
   },
   embedding: {
     type: [Number],
-    required: true,
   },
-  Score : {
+  Score: {
     type: Number,
   },
   Shortlisted: {
@@ -46,10 +81,10 @@ const candidateSchema = new Schema({
   jobId: {
     type: Schema.Types.ObjectId,
     ref: "Job",
-    // required: true,
   },
+  evaluation: evaluationSchema, // nested evaluation field
 }, {
-  timestamps: true, // adds createdAt and updatedAt fields
+  timestamps: true,
 });
 
 const Candidate = mongoose.model("Candidate", candidateSchema);

@@ -5,10 +5,10 @@ import { hrPrompt, techPrompt, bizPrompt, decisionPrompt } from "./prompt.js";
 import { io } from '../config/socket.js';
 
 // Initialize specialized LLM instances
-const hrLLM = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0.2 });
-const techLLM = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0.1 });
-const businessLLM = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0.3 });
-const decisionLLM = new ChatOpenAI({ modelName: "gpt-4o", temperature: 0 });
+const hrLLM = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0.2 });
+const techLLM = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0.1 });
+const businessLLM = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0.3 });
+const decisionLLM = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0 });
 
 /**
  * HR Analyst Node - Evaluates cultural fit and soft skills
@@ -155,14 +155,38 @@ async function runCVReview(jobSummary, cvSummary,jobTitle) {
 
   console.log("\n=== REVIEW PROCESS COMPLETED ===");
   io.emit("message", "\n=== REVIEW PROCESS COMPLETED ===");
-  
+
+  const { hrEvaluation, techEvaluation, businessEvaluation, finalDecision } = result;
+
   return {
-    scores: {
-      hr: result.hrEvaluation,
-      tech: result.techEvaluation,
-      business: result.businessEvaluation
-    },
-    finalDecision: result.finalDecision
+    evaluation: {
+      hrScore: hrEvaluation.hrScore,
+      hrRationale: hrEvaluation.hrRationale,
+      culturalRedFlags: hrEvaluation.culturalRedFlags || [],
+      diversityAssets: hrEvaluation.diversityAssets || [],
+      techScore: techEvaluation.techScore,
+      techRationale: techEvaluation.techRationale,
+      skillValidation: techEvaluation.skillValidation || { verified: [], unverified: [] },
+      techDebtRisk: techEvaluation.techDebtRisk || "",
+      businessScore: businessEvaluation.businessScore,
+      businessRationale: businessEvaluation.businessRationale,
+      timeToProductivity: businessEvaluation.timeToProductivity || "",
+      growthForecast: businessEvaluation.growthForecast || { "6mo": "", "3yr": "" },
+      finalDecision: finalDecision.finalDecision,
+      decisionRationale: finalDecision.decisionRationale,
+      scoreBreakdown: {
+        hrScore: hrEvaluation.hrScore || 0,
+        techScore: techEvaluation.techScore || 0,
+        businessScore: businessEvaluation.businessScore || 0,
+        compositeScore: (
+          (hrEvaluation.hrScore || 0) +
+          (techEvaluation.techScore || 0) +
+          (businessEvaluation.businessScore || 0)
+        ) / 3,
+      },
+      riskFactors: finalDecision.riskFactors || [],
+      recommendedNextSteps: finalDecision.recommendedNextSteps || [],
+    }
   };
 }
 

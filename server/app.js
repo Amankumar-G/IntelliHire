@@ -15,7 +15,6 @@ import './config/mongodb.js';
 import { displayStartupMessage } from './config/start.js';
 import passportConfig from './config/passport.js';
 import userRoutes from './Router/user.js';
-import uploadRouter from './Router/upload.js';
 import fileUploadRouter from './Router/fileUpload.js';
 import candidateRoutes from './Router/candidate.js';
 import jobOpeningRouter from './Router/jobOpening.js';
@@ -136,7 +135,6 @@ app.use("/job-description", jobDescriptionRouter);
 app.use("/job-opening", jobOpeningRouter);
 app.use("/candidate", candidateRoutes);
 app.use("/agent-analysis", agentAnalysisRoutes ); 
-app.use("/", uploadRouter);
 app.use('/user', userRoutes);
 
 // Root Route

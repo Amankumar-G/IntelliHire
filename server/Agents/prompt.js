@@ -123,7 +123,7 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
       "- Rejection mandated for scores <4 without exceptional circumstances\n\n" +
       "Output Requirements:\n" +
       "Return JSON with finalDecision (APPROVE/REJECT/BORDERLINE) and 300-word decisionRationale. " +
-      "Include scoreBreakdown showing individual and composite scores. " +
+      "Include scoreBreakdown showing individual and composite scores. not an avarage but the score which a Chief Neutrality Officer will give" +
       "List riskFactors array and recommendedNextSteps array. " +
       "Validate JSON syntax rigorously - no markdown or formatting errors allowed. " +
       "Ensure output contains only valid JSON with no supplementary text."

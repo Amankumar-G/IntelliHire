@@ -6,7 +6,7 @@ const jobSchema = new mongoose.Schema({
   summary: { type: String, required: true },
   embedding: {
     type: [Number],
-    required: true,
+    // required: true,
   },
   jobOpenings: {
     type: Number,

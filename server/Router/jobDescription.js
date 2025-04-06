@@ -17,14 +17,14 @@ router.post('/', async (req, res) => {
     const summary = await summarizeJD( title, description);
 
     // Generate embedding for the summary
-    const embedding = await generateEmbedding(summary);
+    // const embedding = await generateEmbedding(summary);
 
     // Create and save the job posting
     const jobPosting = new Job({
       title,
       description,
       summary,
-      embedding,
+      // embedding,
       jobOpenings: jobOpenings || 0, 
     });
 

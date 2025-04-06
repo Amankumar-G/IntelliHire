@@ -3,8 +3,7 @@ import { loadPDFText } from "../utils/pdfLoader.js";
 import { extractTextFromDOCX } from "../utils/fileExtractor.js";
 import { generateEmbedding } from "../utils/embedding.js";
 import { summarizeText } from "../utils/summaryGenerator.js"; 
-import { runWorkflow } from "../utils/masterSlave.js";
-import { readFilesRecursive } from "../utils/codeContext.js";
+
 import path from "path";
 import {  io } from '../config/socket.js';
 import fs from "fs/promises"; // Using promise-based fs
@@ -58,7 +57,7 @@ export const singleCv = async (req, res) => {
   
       // Generate embedding
       console.log("🔢 Generating embedding...");
-      const embedding = await generateEmbedding(summary);
+      // const embedding = await generateEmbedding(summary);
   
       // Store in MongoDB
       const candidateRecord = new Candidate({
@@ -66,7 +65,7 @@ export const singleCv = async (req, res) => {
         email: candidateEmail,
         originalFileName: file.originalname,
         summary,
-        embedding,
+        // embedding,
         jobTitle
       });
   
