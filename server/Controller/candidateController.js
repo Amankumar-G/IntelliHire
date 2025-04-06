@@ -86,7 +86,7 @@ const getShortListedByJobId = async (req, res) => {
     if (!candidates || candidates.length === 0) {
       return res.status(404).json({ message: "No shortlisted candidates found for this job." });
     }
-
+  
     // Sort candidates by total score (customizable)
     candidates.sort((a, b) => {
       const scoreA =
@@ -103,10 +103,12 @@ const getShortListedByJobId = async (req, res) => {
     });
 
     // Apply limit after sorting
-    const topCandidates = candidates.slice(0, limit);
-    
+    const topCandidates = candidates.slice(0, 6);
+    console.log("Top Candidates:", topCandidates);
     const response = topCandidates.map((candidate) => ({
       id: candidate._id,
+      email : candidate.email,
+      jobTitle: candidate.jobTitle,
       pdfName: candidate.originalFileName || "cv_default.pdf",
       candidateName: candidate.name || "Unknown",
       hrStatus: candidate.evaluation?.scoreBreakdown?.hrScore !== undefined
@@ -118,6 +120,8 @@ const getShortListedByJobId = async (req, res) => {
       businessStatus: candidate.evaluation?.scoreBreakdown?.businessScore !== undefined
         ? `score: ${candidate.evaluation.scoreBreakdown.businessScore * 10}%`
         : "not available",
+      finalDecision: candidate.evaluation?.finalDecision || "not available",
+      finalScore : candidate.evaluation?.scoreBreakdown?.compositeScore || 0,
     }));
 
     res.status(200).json(response);
