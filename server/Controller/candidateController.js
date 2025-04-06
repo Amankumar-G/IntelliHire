@@ -5,15 +5,29 @@ import { Mail } from "../Agents/mailAgent.js";
 const getAllCandidates = async (req, res) => {
   console.log("Fetching all candidates...");
   try {
-    const candidates = await Candidate.find().select(
-      "-__v -summary -embedding"
-    ); // Exclude __v field from the response
-    res.status(200).json(candidates);
+    const candidates = await Candidate.find().select("-__v -summary -embedding");
+    const response = candidates.map((candidate) => ({
+      id: candidate._id,
+      pdfName: candidate.originalFileName || "cv_default.pdf",
+      candidateName: candidate.name || "Unknown Candidate",
+      hrStatus: candidate.evaluation?.scoreBreakdown?.hrScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.hrScore * 10}%`
+        : "Pending Evalution",
+      techStatus: candidate.evaluation?.scoreBreakdown?.techScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.techScore * 10}%`
+        : "Pending Evalution",
+      businessStatus: candidate.evaluation?.scoreBreakdown?.businessScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.businessScore * 10}%`
+        : "Pending Evalution",
+    }));
+
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error fetching candidates:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 const getCandidate = async (req, res) => {
   const { id } = req.params;
