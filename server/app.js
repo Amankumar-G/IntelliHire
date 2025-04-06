@@ -16,7 +16,11 @@ import { displayStartupMessage } from './config/start.js';
 import passportConfig from './config/passport.js';
 import userRoutes from './Router/user.js';
 import uploadRouter from './Router/upload.js';
-import backRouter from "./Router/Back.js"
+import fileUploadRouter from './Router/fileUpload.js';
+import candidateRoutes from './Router/candidate.js';
+import jobOpeningRouter from './Router/jobOpening.js';
+import jobDescriptionRouter from './Router/jobDescription.js';
+import agentAnalysisRoutes from './Router/agentAnalysis.js';
 import { initializeSocket, io } from './config/socket.js';
 
 // Display startup banner
@@ -67,7 +71,7 @@ passportConfig(passport);
 app.use((req, res, next) => {
   const start = Date.now();
   const logTime = new Date().toLocaleString();
-
+  console.log("request....", req.method, req.url, logTime);
   res.on('finish', () => {
     const duration = Date.now() - start;
     const methodColor = {
@@ -127,8 +131,12 @@ app.get('/metrics', async (req, res) => {
 });
 
 // Use Routes
-app.use("/frontend", uploadRouter);
-app.use("/backend", backRouter);
+app.use("/upload", fileUploadRouter);
+app.use("/job-description", jobDescriptionRouter);
+app.use("/job-opening", jobOpeningRouter);
+app.use("/candidate", candidateRoutes);
+app.use("/agent-analysis", agentAnalysisRoutes ); 
+app.use("/", uploadRouter);
 app.use('/user', userRoutes);
 
 // Root Route
