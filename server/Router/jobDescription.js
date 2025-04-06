@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 
     await jobPosting.save();
 
-    res.status(201).json({ message: 'Job posting created successfully.', jobPosting });
+    res.status(201).json({ message: 'Job posting created successfully.', id  : jobPosting._id, jobPosting });
   } catch (error) {
     console.error('Error processing job posting:', error);
     res.status(500).json({ error: 'Internal Server Error', details: error.message });

@@ -21,8 +21,8 @@ const evaluationSchema = new Schema({
   businessRationale: String,
   timeToProductivity: String,
   growthForecast: {
-    "6mo": String,
-    "3yr": String,
+    '6mo': { type: mongoose.Schema.Types.Mixed }, // or just: Object
+    '3yr': { type: mongoose.Schema.Types.Mixed },
   },
   finalDecision: String,
   decisionRationale: String,
@@ -81,6 +81,7 @@ const candidateSchema = new Schema({
   jobId: {
     type: Schema.Types.ObjectId,
     ref: "Job",
+    required: true,
   },
   evaluation: evaluationSchema, // nested evaluation field
 }, {

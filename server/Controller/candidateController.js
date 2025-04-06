@@ -28,6 +28,42 @@ const getAllCandidates = async (req, res) => {
   }
 };
 
+const getCandidatesByJobId = async (req, res) => {
+  const { jobId } = req.params;
+  console.log("Fetching candidates for jobId:", jobId);
+  if (!jobId) {
+    return res.status(400).json({ message: "Job ID is required" });
+  }
+  try {
+    const candidates = await Candidate.find({ jobId }).select("-__v -embedding -summary");
+
+    if (!candidates || candidates.length === 0) {
+      return res.status(404).json({ message: "No candidates found for this job." });
+    }
+
+    const response = candidates.map((candidate) => ({
+      id: candidate._id,
+      pdfName: candidate.originalFileName || "cv_default.pdf",
+      candidateName: candidate.name || "Unknown",
+      hrStatus: candidate.evaluation?.scoreBreakdown?.hrScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.hrScore * 10}%`
+        : "not available",
+      techStatus: candidate.evaluation?.scoreBreakdown?.techScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.techScore * 10}%`
+        : "not available",
+      businessStatus: candidate.evaluation?.scoreBreakdown?.businessScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.businessScore * 10}%`
+        : "not available",
+    }));
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching candidates by jobId:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 
 const getCandidate = async (req, res) => {
   const { id } = req.params;
@@ -121,4 +157,5 @@ export {
   deleteCandidate,
   getAllCandidates,
   mailCandidate,
+  getCandidatesByJobId
 };
