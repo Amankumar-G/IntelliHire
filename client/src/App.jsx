@@ -17,19 +17,20 @@ import ScreenWithAi from './components/ScreenWithAi.jsx'
 import AgentStatus from './components/AgentStatus.jsx'
 import Shortlidted from './components/Shortlidted.jsx'
 import Interview from './components/Interview.jsx'
+import { JobIdProvider } from './context/JobIdContext.jsx'
 
 
 function AppRoutes() {
   const [dark, setDark] = useState(false);
   const {user,setUser} = useUser();
    const {toggleDarkMode, setToggleDarkMode} = useToggle();
-  useEffect(()=>{
-    //  axios profile
-    // setUser profile
-    console.log(user);
-    // setDark(true);
-    setUser({name:"xyz"});
-  },[])
+  // useEffect(()=>{
+  //   //  axios profile
+  //   // setUser profile
+  //   console.log(user);
+  //   // setDark(true);
+  //   setUser({name:"xyz"});
+  // },[])
 
   return (
     <div className={toggleDarkMode?"dark":""}> 
@@ -60,6 +61,7 @@ function AppRoutes() {
 function App(){
   return(
     // provide context here
+    <JobIdProvider>
     <UserProvider>
       <ToggleProvider>
     <BrowserRouter>
@@ -67,6 +69,7 @@ function App(){
      </BrowserRouter>
       </ToggleProvider>
     </UserProvider>
+    </JobIdProvider>
   )
 
 }

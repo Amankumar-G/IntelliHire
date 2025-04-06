@@ -45,7 +45,7 @@ function ScreenWithAi() {
           state: {
             title,
             description,
-            id
+            jobId
           },
         });
         // window.location.href = "/shortlisted"; // Replace with your actual route
@@ -89,13 +89,14 @@ function ScreenWithAi() {
 
     const formData = new FormData();
     formData.append("jobTitle", title);
+    formData.append("jobId",jobId);
     cvFiles.forEach((file) => {
       formData.append("CVs", file);
     });
     // {{server}}/upload/many
     setCvLoading(true);
     try {
-      await axios.post(`${API_BASE_URL}/upload/many/${jobId}`, formData, {
+      await axios.post(`${API_BASE_URL}/upload/many`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

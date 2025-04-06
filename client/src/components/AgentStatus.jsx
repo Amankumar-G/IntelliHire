@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from "react-router-dom";
+import { useJobID } from '../context/JobIdContext';
 
 const getStatusChip = (status) => {
   if (status.includes('score')) {
@@ -73,13 +74,15 @@ export default function AgentStatus() {
   const [showJD, setShowJD] = useState(false);
   const [candidateData, setCandidateData] = useState([]);
   const location = useLocation();
-  const { title, description ,id} = location.state || {};
+  const { title, description ,jobId} = location.state || {};
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const {jobIdcurr, setJobIdcurr} = useJobID();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Replace the URL below with your actual backend endpoint
-    axios.get(`${API_BASE_URL}/candidate/${id}`)
+    setJobIdcurr(jobId);
+    axios.get(`${API_BASE_URL}/candidate/job/${jobId}`)
       .then(response => {
         setCandidateData(response.data);
       })
@@ -87,13 +90,13 @@ export default function AgentStatus() {
         console.error('Error fetching candidate data:', error);
       });
   }, []);
-
+  // agent-analysis/job/67f248a8874515156a55f04b
 
   const handleCreateAndAnalyze = async () => {
     try {
       // Second: Send that ID for analysis
-      const analyzeResponse = await axios.get(`${API_BASE_URL}/analyzeJobPosting/${id}`);
-  
+      const analyzeResponse = await axios.get(`${API_BASE_URL}/agent-analysis/job/${jobId}`);
+      window.location.reload();
       console.log('Analysis result:', analyzeResponse.data);
       // You can update the UI or navigate to another screen here
     } catch (error) {
@@ -166,7 +169,7 @@ export default function AgentStatus() {
                 <TableRow
                   key={index}
                   className="transition-all duration-300 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => navigate(`/ShortListedCandidate/${row.id}`, { state: row })}
+                  onClick={() => navigate(`/ShortListedCandidate`, { state: row })}
                 >
                   <TableCell sx={{ color: 'white', fontWeight: 'semibold' }}>{row.pdfName}</TableCell>
                   <TableCell sx={{ color: 'white', fontWeight: 'semibold' }}>{row.candidateName}</TableCell>
