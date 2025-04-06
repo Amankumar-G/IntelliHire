@@ -70,7 +70,7 @@ router.get('/:id', async (req, res) => {
         );
   
         candidate.evaluation = evaluation;
-        candidate.Shortlisted = evaluation.finalDecision === "shortlist";
+        candidate.Shortlisted = evaluation.finalDecision === "APPROVE";
         await candidate.save();
   
         evaluatedCandidates.push({
