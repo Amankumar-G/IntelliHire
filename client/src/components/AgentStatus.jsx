@@ -76,27 +76,36 @@ export default function AgentStatus() {
   const location = useLocation();
   const { title, description ,jobId} = location.state || {};
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const {jobIdcurr, setJobIdcurr} = useJobID();
+  const [done,setDone] = useState(false);
+  // const [error,setError] = useEffect("")
+  const {jobIdcurr} = useJobID();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // if (!jobIdcurr) {
+    //   alert("No job ID selected. Please go back and select a job.");
+    //   return;
+    // }
+    console.log(jobIdcurr);
+ 
     // Replace the URL below with your actual backend endpoint
-    setJobIdcurr(jobId);
-    axios.get(`${API_BASE_URL}/candidate/job/${jobId}`)
+    axios.get(`${API_BASE_URL}/candidate/job/${jobIdcurr}`)
       .then(response => {
         setCandidateData(response.data);
       })
       .catch(error => {
         console.error('Error fetching candidate data:', error);
       });
-  }, []);
+
+  }, [done]);
   // agent-analysis/job/67f248a8874515156a55f04b
 
   const handleCreateAndAnalyze = async () => {
     try {
       // Second: Send that ID for analysis
-      const analyzeResponse = await axios.get(`${API_BASE_URL}/agent-analysis/job/${jobId}`);
-      window.location.reload();
+      const analyzeResponse = await axios.get(`${API_BASE_URL}/agent-analysis/job/${jobIdcurr}`);
+      setDone(true);
+      navigate('/AgentStatus') 
       console.log('Analysis result:', analyzeResponse.data);
       // You can update the UI or navigate to another screen here
     } catch (error) {

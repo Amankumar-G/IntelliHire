@@ -5,6 +5,7 @@ import { Upload } from "lucide-react";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useJobID } from "../context/JobIdContext";
 
 function ScreenWithAi() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -16,6 +17,7 @@ function ScreenWithAi() {
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
   const navigate = useNavigate();
+  const {jobIdcurr, setJobIdcurr} = useJobID();
 
   const [jdUploaded, setJdUploaded] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -68,6 +70,7 @@ function ScreenWithAi() {
       });
 
       if (response.status === 200 || response.status == 201) {
+        setJobIdcurr(response.data.id);
         setJobId(response.data.id);
         setJdDone(true);
       } else {
