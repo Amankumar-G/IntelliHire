@@ -95,8 +95,9 @@ const InterviewScreen = () => {
                 <TableHead>
                   <TableRow className="bg-gray-800">
                     <TableCell className="text-white font-semibold">Name</TableCell>
+                    <TableCell className="text-white font-semibold">PDF</TableCell>
                     <TableCell className="text-white font-semibold">Email</TableCell>
-                    <TableCell className="text-white font-semibold">Job Role</TableCell>
+                    {/* <TableCell className="text-white font-semibold">Job</TableCell> */}
                     <TableCell className="text-white font-semibold">Match Score</TableCell>
                     <TableCell className="text-white font-semibold">Status</TableCell>
                     <TableCell className="text-white font-semibold">Action</TableCell>
@@ -111,10 +112,10 @@ const InterviewScreen = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <TableCell className="text-white">{candidate.name}</TableCell>
+                      <TableCell className="text-white">{candidate.candidateName}</TableCell>
+                      <TableCell className="text-white">{candidate.pdfName}</TableCell>
                       <TableCell className="text-white">{candidate.email}</TableCell>
-                      <TableCell className="text-white">{candidate.jobRole}</TableCell>
-                      <TableCell className="text-white">{candidate.matchScore}%</TableCell>
+                      <TableCell className="text-white">{candidate.finalScore}%</TableCell>
                       <TableCell className="text-white">{candidate.interviewStatus}</TableCell>
                       <TableCell>
                         <Button
