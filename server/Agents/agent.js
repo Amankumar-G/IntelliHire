@@ -21,10 +21,12 @@ async function hrAnalyst(state) {
   
   const prompt = hrPrompt;
   const chain = prompt.pipe(hrLLM);
-  console.log(state)
   const response = await chain.invoke(state);
   
-  const evaluation = JSON.parse(response.content.replace(/^json\s*/i, ''));
+  const evaluation = JSON.parse(response.content
+    .replace(/^json\s*/i, '')
+    .replace(/```/g, '')
+    .trim());
   console.log("HR Evaluation:", evaluation);
   io.emit("hr-evaluation", evaluation);
   
@@ -44,7 +46,10 @@ async function techAnalyst(state) {
   const chain = prompt.pipe(techLLM);
   const response = await chain.invoke(state);
   
-  const evaluation = JSON.parse(response.content.replace(/^json\s*/i, ''));
+  const evaluation = JSON.parse(response.content
+    .replace(/^json\s*/i, '')
+    .replace(/```/g, '')
+    .trim());
   console.log("Technical Evaluation:", evaluation);
   io.emit("tech-evaluation", evaluation);
   
@@ -64,7 +69,10 @@ async function businessAnalyst(state) {
   const chain = prompt.pipe(businessLLM);
   const response = await chain.invoke(state);
   
-  const evaluation = JSON.parse(response.content.replace(/^json\s*/i, ''));
+  const evaluation = JSON.parse(response.content
+    .replace(/^json\s*/i, '')
+    .replace(/```/g, '')
+    .trim());
   console.log("Business Evaluation:", evaluation);
   io.emit("business-evaluation", evaluation);
   
@@ -97,9 +105,6 @@ async function decisionMaker(state) {
 }
 
 async function runCVReview(jobSummary, cvSummary,jobTitle) {
-    console.log("Job Summary:", jobSummary);
-    console.log("CV Summary:", cvSummary);
-    console.log("Job Title:", jobTitle);
   const workflow = new StateGraph({
     channels: {
       jobSummary: {
@@ -144,7 +149,8 @@ async function runCVReview(jobSummary, cvSummary,jobTitle) {
   
   const result = await app.invoke({
     jobSummary: jobSummary,
-    cvSummary: cvSummary
+    cvSummary: cvSummary,
+    jobTitle: jobTitle
   });
 
   console.log("\n=== REVIEW PROCESS COMPLETED ===");

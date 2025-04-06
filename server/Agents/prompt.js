@@ -27,6 +27,7 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
       "Include culturalRedFlags array and diversityAssets array. " +
       "Do NOT include any explanatory text outside JSON structure. " +
       "Ensure JSON is properly formatted and validate your output before returning."
+    + "at the end generated json do not put any backticks and json like this =>  \`\`\`\json \`\`\`"
     ]
   ]);
 
@@ -59,6 +60,7 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
       "Provide techDebtRisk assessment as string. " +
       "Validate JSON syntax thoroughly before returning. " +
       "No additional text outside the JSON structure is permitted."
+       + "at the end generated json do not put any backticks and json like this =>  \`\`\`\json \`\`\`"
     ]
   ]);
 
@@ -90,6 +92,7 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
       "Ensure JSON structure is valid and properly formatted. " +
       "Validate output syntax before returning. " +
       "No additional commentary outside JSON structure is permitted."
+       + "at the end generated json do not put any backticks and json like this =>  \`\`\`\json \`\`\`"
     ]
   ]);
 
@@ -124,5 +127,6 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
       "List riskFactors array and recommendedNextSteps array. " +
       "Validate JSON syntax rigorously - no markdown or formatting errors allowed. " +
       "Ensure output contains only valid JSON with no supplementary text."
+       + "at the end generated json do not put any backticks and json like this =>  \`\`\`\json \`\`\`"
     ]
   ]);

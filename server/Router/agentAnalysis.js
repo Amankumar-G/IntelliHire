@@ -13,12 +13,12 @@ router.get('/:id',async (req, res) => {
         return res.status(404).json({ message: "Candidate not found" });
     }
 
-    const job = await Job.find({title : candidate.jobTitle});
+    const job = await Job.findOne({title : candidate.jobTitle});
 
     if (!job) {
         return res.status(404).json({ message: "Job not found" });
     }
-    console.log(job, candidate);
+
     const response =await runCVReview(job.summary, candidate.summary,candidate.jobTitle);
     console.log(response);
     res.send('Agent Analysis Endpoint');
