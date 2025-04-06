@@ -314,14 +314,19 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
+import { useParams, useLocation } from 'react-router-dom';
 
 const COLORS = ['#00C49F', '#FF8042', '#8884d8'];
 
 const CandidateAnalysis = ({ candidateId }) => {
   const [data, setData] = useState(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const { id } = useParams();
+const location = useLocation();
+const rowData = location.state;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/candidate-analysis/${candidateId}`)
+    fetch(`${API_BASE_URL}/candidate/${id}`)
       .then(res => res.json())
       .then(json => setData(json))
       .catch(err => console.error('Error:', err));
