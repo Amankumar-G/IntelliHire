@@ -81,8 +81,8 @@ const getShortListedByJobId = async (req, res) => {
     console.log("Job Limit:", limit);
 
     // Fetch only shortlisted candidates
-    let candidates = await Candidate.find({ jobId, Shortlisted: true }).select("-__v -embedding -summary");
-
+    let candidates = await Candidate.find({ jobId, Shortlisted : true }).select("-__v -embedding -summary");
+   
     if (!candidates || candidates.length === 0) {
       return res.status(404).json({ message: "No shortlisted candidates found for this job." });
     }
@@ -104,7 +104,7 @@ const getShortListedByJobId = async (req, res) => {
 
     // Apply limit after sorting
     const topCandidates = candidates.slice(0, limit);
-
+    
     const response = topCandidates.map((candidate) => ({
       id: candidate._id,
       pdfName: candidate.originalFileName || "cv_default.pdf",
