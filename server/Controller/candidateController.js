@@ -1,6 +1,7 @@
 import Candidate from "../Schema/Candidate.js";
 import sendEmail from "../utils/sendEmail.js"; // Adjust the import path as necessary
 import { Mail } from "../Agents/mailAgent.js";
+import Jobs from "../Schema/Job.js"; // Adjust the import path as necessary
 
 const getAllCandidates = async (req, res) => {
   console.log("Fetching all candidates...");
@@ -62,6 +63,70 @@ const getCandidatesByJobId = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+const getShortListedByJobId = async (req, res) => {
+  const { jobId } = req.params;
+  console.log("Fetching candidates for jobId:", jobId);
+
+  if (!jobId) {
+    return res.status(400).json({ message: "Job ID is required" });
+  }
+
+  try {
+    // Get job opening limit
+    const job = await Jobs.findById(jobId).select("jobOpenings").exec();
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    const limit = job.jobOpenings;
+    console.log("Job Limit:", limit);
+
+    // Fetch only shortlisted candidates
+    let candidates = await Candidate.find({ jobId, Shortlisted: true }).select("-__v -embedding -summary");
+
+    if (!candidates || candidates.length === 0) {
+      return res.status(404).json({ message: "No shortlisted candidates found for this job." });
+    }
+
+    // Sort candidates by total score (customizable)
+    candidates.sort((a, b) => {
+      const scoreA =
+        (a.evaluation?.scoreBreakdown?.hrScore || 0) +
+        (a.evaluation?.scoreBreakdown?.techScore || 0) +
+        (a.evaluation?.scoreBreakdown?.businessScore || 0);
+
+      const scoreB =
+        (b.evaluation?.scoreBreakdown?.hrScore || 0) +
+        (b.evaluation?.scoreBreakdown?.techScore || 0) +
+        (b.evaluation?.scoreBreakdown?.businessScore || 0);
+
+      return scoreB - scoreA; // Descending
+    });
+
+    // Apply limit after sorting
+    const topCandidates = candidates.slice(0, limit);
+
+    const response = topCandidates.map((candidate) => ({
+      id: candidate._id,
+      pdfName: candidate.originalFileName || "cv_default.pdf",
+      candidateName: candidate.name || "Unknown",
+      hrStatus: candidate.evaluation?.scoreBreakdown?.hrScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.hrScore * 10}%`
+        : "not available",
+      techStatus: candidate.evaluation?.scoreBreakdown?.techScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.techScore * 10}%`
+        : "not available",
+      businessStatus: candidate.evaluation?.scoreBreakdown?.businessScore !== undefined
+        ? `score: ${candidate.evaluation.scoreBreakdown.businessScore * 10}%`
+        : "not available",
+    }));
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error fetching shortlisted candidates by jobId:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 
 
@@ -157,5 +222,6 @@ export {
   deleteCandidate,
   getAllCandidates,
   mailCandidate,
-  getCandidatesByJobId
+  getCandidatesByJobId,
+  getShortListedByJobId
 };
