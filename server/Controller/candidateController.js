@@ -87,13 +87,11 @@ const mailCandidate = async (req, res) => {
         recommendedNextSteps: candidate.evaluation?.recommendedNextSteps,
       },
     };
-    console.log("Filtered candidate data:", filteredData);
     const { message } = await Mail(filteredData);
     const send_to = candidate.email; // Assuming candidate has an email field
     const subject = "Your Application Status";
     const sent_from = process.env.EMAIL_USER; // Your email address
 
-    console.log("Sending email to:", message.content);
     // await sendEmail(candidate.email, "Subject", "Email body");
     await sendEmail(subject, message.content, send_to, sent_from);
     res.status(200).json({ data: "Email sent successfully" });

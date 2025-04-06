@@ -139,7 +139,6 @@ app.use('/user', userRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
-  console.log("log....")
   res.send("🚀 Server is live with Socket.IO and Prometheus Metrics!");
 });
 
