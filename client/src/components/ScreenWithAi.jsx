@@ -23,6 +23,7 @@ function ScreenWithAi() {
   const [cvLoading, setCvLoading] = useState(false);
   const [jdDone, setJdDone] = useState(false);
   const [cvDone, setCvDone] = useState(false);
+  const [jobId,setJobId] = useState(0);
 
   const getWordCount = (text) => {
     return text.trim().split(/\s+/).filter(Boolean).length;
@@ -44,6 +45,7 @@ function ScreenWithAi() {
           state: {
             title,
             description,
+            id
           },
         });
         // window.location.href = "/shortlisted"; // Replace with your actual route
@@ -66,6 +68,7 @@ function ScreenWithAi() {
       });
 
       if (response.status === 200 || response.status == 201) {
+        setJobId(response.data.id);
         setJdDone(true);
       } else {
         console.error("Upload failed:", response.statusText);
@@ -92,7 +95,7 @@ function ScreenWithAi() {
     // {{server}}/upload/many
     setCvLoading(true);
     try {
-      await axios.post(`${API_BASE_URL}/upload/many`, formData, {
+      await axios.post(`${API_BASE_URL}/upload/many/${jobId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -223,7 +226,7 @@ function ScreenWithAi() {
         )}
 
         {/* Step 3 */}
-        {step >= 3 && (
+        {step >= 3 && jdDone &&(
           <div
             ref={step3Ref}
             className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-300 dark:border-gray-700"
