@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import promMid from 'express-prometheus-middleware';
+// import promMid from 'express-prometheus-middleware';
 import { register } from 'prom-client'; // Import Prometheus client
 
 import cors from './config/corsConfig.js';
@@ -15,8 +15,11 @@ import './config/mongodb.js';
 import { displayStartupMessage } from './config/start.js';
 import passportConfig from './config/passport.js';
 import userRoutes from './Router/user.js';
-import uploadRouter from './Router/upload.js';
-import backRouter from "./Router/Back.js"
+import fileUploadRouter from './Router/fileUpload.js';
+import candidateRoutes from './Router/candidate.js';
+import jobOpeningRouter from './Router/jobOpening.js';
+import jobDescriptionRouter from './Router/jobDescription.js';
+import agentAnalysisRoutes from './Router/agentAnalysis.js';
 import { initializeSocket, io } from './config/socket.js';
 
 // Display startup banner
@@ -35,13 +38,13 @@ initializeSocket(server);
 const PORT = process.env.PORT || 5000;
 
 // Prometheus Middleware for Metrics
-app.use(promMid({
-  metricsPath: '/metrics',
-  collectDefaultMetrics: true,
-  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
-  requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-  responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-}));
+// app.use(promMid({
+//   metricsPath: '/metrics',
+//   collectDefaultMetrics: true,
+//   requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+//   requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+//   responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+// }));
 
 // Middleware
 app.use(express.json());
@@ -67,7 +70,7 @@ passportConfig(passport);
 app.use((req, res, next) => {
   const start = Date.now();
   const logTime = new Date().toLocaleString();
-
+  console.log("request....", req.method, req.url, logTime);
   res.on('finish', () => {
     const duration = Date.now() - start;
     const methodColor = {
@@ -127,8 +130,11 @@ app.get('/metrics', async (req, res) => {
 });
 
 // Use Routes
-app.use("/frontend", uploadRouter);
-app.use("/backend", backRouter);
+app.use("/upload", fileUploadRouter);
+app.use("/job-description", jobDescriptionRouter);
+app.use("/job-opening", jobOpeningRouter);
+app.use("/candidate", candidateRoutes);
+app.use("/agent-analysis", agentAnalysisRoutes ); 
 app.use('/user', userRoutes);
 
 // Root Route
