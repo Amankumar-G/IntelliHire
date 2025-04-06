@@ -91,7 +91,7 @@ export const multipleCv = async (req, res) => {
         try {
           const files = req.files;
           const bodyData = req.body;
-      
+          console.log(bodyData);
           if (!files || files.length === 0) {
             console.log("⚠️ No files uploaded.");
             io.emit("message", "⚠️ No files uploaded.");
@@ -144,6 +144,7 @@ export const multipleCv = async (req, res) => {
               originalFileName: file.originalname,
               summary,
               jobTitle: bodyData.jobTitle || "Unknown", 
+              jobId: bodyData.jobId || null, // Assuming jobId is passed in the body
               // embedding,
             });
       

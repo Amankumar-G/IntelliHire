@@ -44,6 +44,55 @@ router.get('/:id', async (req, res) => {
       res.status(500).json({ message: "Server error", error });
     }
   });
+
+
+  router.get('/job/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      const candidates = await Candidate.find({ jobId: id }).select("-__v -embedding");
+      if (!candidates || candidates.length === 0) {
+        return res.status(404).json({ message: "No candidates found for this job" });
+      }
+  
+      const job = await Job.findById(id);
+      if (!job) {
+        return res.status(404).json({ message: "Job not found" });
+      }
+  
+      const evaluatedCandidates = [];
+  
+      for (const candidate of candidates) {
+        const { evaluation } = await runCVReview(
+          job.summary,
+          candidate.summary,
+          candidate.jobTitle
+        );
+  
+        candidate.evaluation = evaluation;
+        candidate.Shortlisted = evaluation.finalDecision === "shortlist";
+        await candidate.save();
+  
+        evaluatedCandidates.push({
+          name: candidate.name,
+          jobTitle: candidate.jobTitle,
+          email: candidate.email,
+          Shortlisted: candidate.Shortlisted,
+          evaluation,
+        });
+  
+        console.log(`✅ Evaluation saved for ${candidate.name}`);
+      }
+  
+      res.status(200).json({
+        message: "All candidate evaluations completed and saved.",
+        candidates: evaluatedCandidates,
+      });
+    } catch (error) {
+      console.error("❌ Error during evaluation:", error);
+      res.status(500).json({ message: "Server error", error });
+    }
+  });
   
 
 export default router;
