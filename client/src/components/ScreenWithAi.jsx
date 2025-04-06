@@ -264,6 +264,7 @@ import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ScreenWithAi() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -274,6 +275,7 @@ function ScreenWithAi() {
   const [step, setStep] = useState(1);
   const step2Ref = useRef(null);
   const step3Ref = useRef(null);
+  const navigate = useNavigate();
 
   const [jdUploaded, setJdUploaded] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -298,7 +300,13 @@ function ScreenWithAi() {
     if (jdDone && cvDone) {
       setTimeout(() => {
         // Go to next screen after short delay
-        window.location.href = "/shortlisted"; // Replace with your actual route
+        navigate("/AgentStatus", {
+          state: {
+            jobTitle,
+            jobDescription,
+          },
+        });
+        // window.location.href = "/shortlisted"; // Replace with your actual route
       }, 1000);
     }
   }, [jdDone, cvDone]);
@@ -324,6 +332,7 @@ function ScreenWithAi() {
       }
     } catch (error) {
       console.error('Upload error:', error);
+      alert("Failed to upload JDs.");
     } finally {
       setJdLoading(false);
     }

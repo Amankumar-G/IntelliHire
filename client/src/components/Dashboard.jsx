@@ -31,7 +31,7 @@ const agents = [
 
 export default function Dashboard() {
   return (
-    <div className="bg-[#0e101c] min-h-screen text-gray-300  py-12 px-4 md:px-12">
+    <div className="bg-gradient-to-br  from-white via-gray-300 to-gray-200 dark:from-gray-800 dark:via-gray-900 dark:to-black  min-h-screen text-gray-300  py-12 md:px-36">
       <header className="text-center mb-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
