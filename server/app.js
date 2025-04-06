@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import promMid from 'express-prometheus-middleware';
+// import promMid from 'express-prometheus-middleware';
 import { register } from 'prom-client'; // Import Prometheus client
 
 import cors from './config/corsConfig.js';
@@ -38,13 +38,13 @@ initializeSocket(server);
 const PORT = process.env.PORT || 5000;
 
 // Prometheus Middleware for Metrics
-app.use(promMid({
-  metricsPath: '/metrics',
-  collectDefaultMetrics: true,
-  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
-  requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-  responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
-}));
+// app.use(promMid({
+//   metricsPath: '/metrics',
+//   collectDefaultMetrics: true,
+//   requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+//   requestLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+//   responseLengthBuckets: [512, 1024, 5120, 10240, 51200, 102400],
+// }));
 
 // Middleware
 app.use(express.json());

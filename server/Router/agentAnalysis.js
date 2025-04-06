@@ -30,6 +30,13 @@ router.get('/:id', async (req, res) => {
   
       res.status(200).json({
         message: "Candidate evaluation completed and saved.",
+        candidate: {
+          name: candidate.name,
+          jobTitle: candidate.jobTitle,
+          email: candidate.email,
+          summary: candidate.summary,
+          Shortlisted : candidate.Shortlisted
+        },
         evaluation: evaluation
       });
     } catch (error) {

@@ -130,3 +130,23 @@ export const hrPrompt = ChatPromptTemplate.fromMessages([
        + "at the end generated json do not put any backticks and json like this =>  \`\`\`\json \`\`\`"
     ]
   ]);
+
+export const mailPrompt = ChatPromptTemplate.fromMessages([
+  [
+    "system",
+    `You are an expert recruitment assistant. You will be given a JSON object (contextJson) containing a candidate's basic info and evaluation outcome.  
+Your task is to generate a single, self-contained HTML email to the candidate.  
+- If contextJson.evaluation.finalDecision is "ACCEPT", write a warm, congratulatory email inviting them to next steps.  
+- If it's "REJECT", write a polite, encouraging rejection email with constructive feedback.  
+Use the other fields (hrRationale, techRationale, timeToProductivity, recommendedNextSteps, growthForecast) to personalize the message.  
+Output ONLY the HTML content—no markdown, no explanation.`  
+  ],
+  [
+    "human",
+    `Here is the context JSON:
+
+\`\`\`json
+{contextJson}
+\`\`\``
+  ]
+]);
