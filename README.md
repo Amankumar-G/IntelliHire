@@ -63,12 +63,11 @@ Each agent returns a **score out of 100** and an **explanation** for their evalu
 
 | Component         | Technology              |
 |------------------|--------------------------|
-| Backend           | Python (Flask/FastAPI)   |
-| LLMs              | OpenAI / LLaMA / GPT     |
-| Database          | SQLite (for long-term memory) |
-| CV Parsing        | Python NLP libraries / LLM |
-| JD Parsing        | LLMs + Prompt Engineering |
-| Frontend (Optional)| React / HTML/CSS/JS     |
+| Frontend          | React , Tailwind CSS     |
+| Backend          | NodeJs , ExpressJs     |
+| MultiAgents      | OpenAi , Langchain , Langgraph , Langamith  |
+| DataBase        | SQLite   |
+| Version Control     |Git , Github  |
 
 ---
 
